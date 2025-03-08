@@ -8,9 +8,13 @@ import org.apache.shiro.subject.Subject;
 
 import java.util.Objects;
 
-public record UserSecurityManager(Realm realm) {
+/**
+ * Main record of configuring a security manager to interact with realms.
+ * @param realm
+ */
+public record PassikSecurityManager(Realm realm) {
 
-    public UserSecurityManager {
+    public PassikSecurityManager {
         Objects.requireNonNull(realm, "'realm shall not be null'");
     }
 
