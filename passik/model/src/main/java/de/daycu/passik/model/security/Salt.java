@@ -1,17 +1,12 @@
-package de.daycu.passik.model.auth;
+package de.daycu.passik.model.security;
 
-import java.util.Random;
+import org.apache.shiro.crypto.RandomNumberGenerator;
+import org.apache.shiro.crypto.SecureRandomNumberGenerator;
 
 public record Salt() {
 
-    public static String generate() {
-        final int leftLimit = 97;
-        final int rightLimit = 122;
-        final int stringLength = 5;
-
-        return new Random().ints(leftLimit, rightLimit + 1)
-            .limit(stringLength)
-            .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
-            .toString();
+    public static Object generate() {
+        RandomNumberGenerator randomNumberGenerator = new SecureRandomNumberGenerator();
+        return randomNumberGenerator.nextBytes();
     }
 }
