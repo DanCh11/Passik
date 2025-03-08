@@ -6,10 +6,6 @@ public record MasterLogin(String value) {
 
     public MasterLogin {
         Objects.requireNonNull(value, "'value' must not be empty");
-        
-        if (value.isEmpty()) {
-            throw new IllegalArgumentException("'value' must not be empty");
-        }
+        if (value.isEmpty()) throw new IllegalArgumentException("'value' must not be empty");
     }
-    
 }
