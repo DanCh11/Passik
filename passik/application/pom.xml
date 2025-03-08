@@ -11,6 +11,14 @@
 
     <artifactId>application</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>de.daycu.passik</groupId>
+            <artifactId>model</artifactId>
+            <version>0.0.1</version>
+        </dependency>
+    </dependencies>
+
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
