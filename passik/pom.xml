@@ -10,35 +10,56 @@
     <packaging>pom</packaging>
     <modules>
         <module>model</module>
+        <module>application</module>
     </modules>
 
     <dependencies>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.36</version>
+            <version>${lombokVersion}</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.13.2</version>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>${jUnitVersion}</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
-            <version>5.11.4</version>
+            <version>${jUnitVersion}</version>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>${mockitoVersion}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
+            <version>${mockitoVersion}</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!-- Dependencies versions  -->
+        <mockitoVersion>5.15.2</mockitoVersion>
+        <jUnitVersion>5.11.4</jUnitVersion>
+        <lombokVersion>1.18.36</lombokVersion>
     </properties>
 
 </project>
