@@ -1,18 +1,19 @@
 package service.security;
 
+import de.daycu.passik.model.security.Master;
+import de.daycu.passik.model.security.MasterLogin;
 import lombok.AllArgsConstructor;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.realm.AuthenticatingRealm;
-
-import java.util.HashMap;
+import port.out.persistance.MasterRepository;
 
 /**
  * Creates a realm to interact with users' authentication data.
  */
 @AllArgsConstructor
-public class UserRealm extends AuthenticatingRealm {
+public class MasterRealm extends AuthenticatingRealm {
 
-    private HashMap<String, String> users;
+    private MasterRepository masterRepository;
 
     /**
      * Retrieves authentication information of the user.
@@ -23,12 +24,13 @@ public class UserRealm extends AuthenticatingRealm {
      */
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
-        String username = (String) token.getPrincipal();
+        MasterLogin masterLogin = new MasterLogin((String) token.getPrincipal());
+        Master master = masterRepository.getMasterByLogin(masterLogin);
+        if (master == null) throw new UnknownAccountException("Account is not registered.");
 
-        if (!users.containsKey(username)) {
-            throw new UnknownAccountException("Account is not registered.");
-        }
-
-        return new SimpleAuthenticationInfo(username, users.get(username), getName());
+        return new SimpleAuthenticationInfo(
+                master.masterLogin().value(),
+                master.masterPassword().value(),
+                getName());
     }
 }
