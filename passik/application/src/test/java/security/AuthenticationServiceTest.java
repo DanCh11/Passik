@@ -3,6 +3,7 @@ package security;
 import de.daycu.passik.model.security.Master;
 import de.daycu.passik.model.security.MasterLogin;
 import de.daycu.passik.model.security.MasterPassword;
+import org.apache.shiro.authc.UnknownAccountException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,7 +17,6 @@ import service.security.MasterRealm;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.lenient;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class AuthenticationServiceTest {
@@ -60,5 +60,18 @@ public class AuthenticationServiceTest {
                 "Invalid credentials provided. Please check your username and password.",
                 result.message()
         );
+    }
+
+    @Test
+    @DisplayName("Testing not registered account")
+    public void testNotRegisteredAccountException() {
+         masterLogin = new MasterLogin("unknownLogin");
+         masterPassword = new MasterPassword("unknownPassword");
+         authenticationService = new AuthenticationService(masterRealm);
+
+         UnknownAccountException exception = assertThrows(UnknownAccountException.class,
+                 () -> authenticationService.authenticate(masterLogin, masterPassword));
+
+         assertEquals("Account is not registered.", exception.getMessage());
     }
 }
