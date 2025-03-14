@@ -22,7 +22,7 @@ jobs:
                 cache: maven
             
             - name: Maven Package
-              run: mvn -B clean package -DskipTests
+              run: mvn -B clean package -DskipTests -f ./passik/pom.xml
 
             - name: Maven Verivy
-              run: mvn -B clean verify
+              run: mvn -B clean verify ./passik/pom.xml
