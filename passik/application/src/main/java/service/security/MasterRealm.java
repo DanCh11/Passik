@@ -1,10 +1,7 @@
 package service.security;
 
 import lombok.AllArgsConstructor;
-import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.AuthenticationInfo;
-import org.apache.shiro.authc.AuthenticationToken;
-import org.apache.shiro.authc.SimpleAuthenticationInfo;
+import org.apache.shiro.authc.*;
 import org.apache.shiro.realm.AuthenticatingRealm;
 
 import java.util.HashMap;
@@ -29,7 +26,7 @@ public class UserRealm extends AuthenticatingRealm {
         String username = (String) token.getPrincipal();
 
         if (!users.containsKey(username)) {
-            System.out.println("There is no such user");
+            throw new UnknownAccountException("Account is not registered.");
         }
 
         return new SimpleAuthenticationInfo(username, users.get(username), getName());
