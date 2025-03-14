@@ -22,7 +22,7 @@ jobs:
                 cache: maven
             
             - name: Maven Package
-              run: mvn -B package --file ../../pom.xml
+              run: mvn -B package --file ../pom.xml
 
             - name: Maven Verivy
               run: mvn -B clean verify
