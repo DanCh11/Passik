@@ -25,4 +25,4 @@ jobs:
               run: mvn -B clean package -DskipTests -f ./passik/pom.xml
 
             - name: Maven Verivy
-              run: mvn -B clean verify ./passik/pom.xml
+              run: mvn -B clean verify -f ./passik/pom.xml
