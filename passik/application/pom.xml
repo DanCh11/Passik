@@ -9,15 +9,13 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <groupId>de.daycu.passik</groupId>
-    <artifactId>model</artifactId>
-    <version>0.0.1</version>
+    <artifactId>application</artifactId>
 
     <dependencies>
         <dependency>
-            <groupId>org.apache.shiro</groupId>
-            <artifactId>shiro-core</artifactId>
-            <version>${shiroVersion}</version>
+            <groupId>de.daycu.passik</groupId>
+            <artifactId>model</artifactId>
+            <version>0.0.1</version>
         </dependency>
     </dependencies>
 
@@ -25,9 +23,6 @@
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
-        <!-- Dependencies versions  -->
-        <shiroVersion>2.0.2</shiroVersion>
     </properties>
 
 </project>
