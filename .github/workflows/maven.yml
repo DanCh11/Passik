@@ -9,9 +9,6 @@ on:
 jobs:
     build:
         runs-on: ubuntu-latest
-        defaults:
-          run:
-            working-directory: ../../
 
         steps:
             - uses: actions/checkout@v4
@@ -25,7 +22,7 @@ jobs:
                 cache: maven
             
             - name: Maven Package
-              run: mvn -B clean package -DskipTests -f ../../pom.xml
+              run: mvn -B clean package -DskipTests -f ./passik/pom.xml
 
             - name: Maven Verivy
-              run: mvn -B clean verify -f ../../pom.xml
+              run: mvn -B clean verify -f ./passik/pom.xml
