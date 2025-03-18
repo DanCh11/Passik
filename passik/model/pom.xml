@@ -28,6 +28,8 @@
 
         <!-- Dependencies versions  -->
         <shiroVersion>2.0.2</shiroVersion>
+        <jacocoVersion>0.8.12</jacocoVersion>
     </properties>
+
 
 </project>
