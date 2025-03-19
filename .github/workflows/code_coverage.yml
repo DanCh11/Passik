@@ -29,10 +29,10 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: jacoco-report
-          path: target/site/jacoco-aggregate/index.html
+          path: code-coverage/target/site/jacoco-aggregate/index.html
 
       - name: Publish coverage report to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.CODE_COVERAGE_TOKEN }}
-          publish_dir: ./target/site/jacoco-aggregate
+          publish_dir: ./code-coverage/target/site/jacoco-aggregate
