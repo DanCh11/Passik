@@ -36,3 +36,8 @@ jobs:
         with:
           github_token: ${{ secrets.CODE_COVERAGE_TOKEN }}
           publish_dir: ./passik/code-coverage/target/site/jacoco-aggregate
+
+      - name: Generate Coverage Badge
+        uses: tj-actions/coverage-badge@v4
+        with:
+          report_path: ./passik/code-coverage/target/site/jacoco-aggregate/index.html
