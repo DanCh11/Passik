@@ -34,5 +34,5 @@ jobs:
       - name: Publish coverage report to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.CODE_COVERAGE_TOKEN }}
           publish_dir: ./target/site/jacoco-aggregate
