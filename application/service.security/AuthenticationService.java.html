@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>AuthenticationService.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">code-coverage</a> &gt; <a href="../index.html" class="el_bundle">application</a> &gt; <a href="index.source.html" class="el_package">service.security</a> &gt; <span class="el_source">AuthenticationService.java</span></div><h1>AuthenticationService.java</h1><pre class="source lang-java linenums">package service.security;
+
+import de.daycu.passik.model.security.MasterLogin;
+import de.daycu.passik.model.security.MasterPassword;
+import lombok.AllArgsConstructor;
+import org.apache.shiro.authc.IncorrectCredentialsException;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.subject.Subject;
+import port.in.security.AuthenticationUseCase;
+
+/**
+ *  Performs authentication by instantiating the users using UserSecurityManager
+ *  with injected UserRealm class.
+ *
+ *  @return successful authentication if the user is found. Else throws an exception.
+ */
+@AllArgsConstructor
+public class AuthenticationService implements AuthenticationUseCase {
+
+    private MasterRealm masterRealm;
+
+    public AuthenticationResult authenticate(MasterLogin masterLogin, MasterPassword masterPassword) {
+
+<span class="fc" id="L24">        UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(</span>
+<span class="fc" id="L25">                masterLogin.value(), masterPassword.value());</span>
+<span class="fc" id="L26">        Subject user = new PassikSecurityManager(masterRealm).configure();</span>
+
+        try {
+<span class="fc" id="L29">            user.login(usernamePasswordToken);</span>
+<span class="fc" id="L30">            return new AuthenticationResult(true, &quot;Login was performed successfully.&quot;);</span>
+<span class="fc" id="L31">        } catch (IncorrectCredentialsException ice) {</span>
+<span class="fc" id="L32">            return new AuthenticationResult(false,</span>
+                    &quot;Invalid credentials provided. Please check your username and password.&quot;);
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

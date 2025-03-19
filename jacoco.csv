@@ -1,0 +1,10 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+code-coverage/adapter,out.persistance,JDBCMasterRepository,3,0,0,0,1,0,1,0,1,0
+code-coverage/application,service.security,AuthenticationResult,0,9,0,0,0,1,0,1,0,1
+code-coverage/application,service.security,AuthenticationService,0,31,0,0,0,7,0,1,0,1
+code-coverage/application,service.security,MasterRealm,0,31,0,2,0,7,0,2,0,1
+code-coverage/application,service.security,PassikSecurityManager,0,20,0,0,0,6,0,2,0,2
+code-coverage/model,de.daycu.passik.model.security,Salt,10,0,0,0,3,0,2,0,2,0
+code-coverage/model,de.daycu.passik.model.security,Master,0,17,0,0,0,4,0,1,0,1
+code-coverage/model,de.daycu.passik.model.security,MasterPassword,0,18,0,2,0,4,0,2,0,1
+code-coverage/model,de.daycu.passik.model.security,MasterLogin,0,18,0,2,0,4,0,2,0,1
