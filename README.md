@@ -28,7 +28,6 @@ Passik is a secure, local-only password manager designed to help you store and m
 
 # License
 This project is licensed under the MIT License. See the LICENSE file for more details.
-Contact
 
 # Contact
 For support or inquiries, please reach out to daycu@proton.me
