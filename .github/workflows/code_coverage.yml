@@ -29,7 +29,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: jacoco-report
-          path: code-coverage/target/site/jacoco-aggregate/index.html
+          path: ./passik/code-coverage/target/site/jacoco-aggregate/index.html
 
       - name: Publish coverage report to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
