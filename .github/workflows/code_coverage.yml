@@ -38,6 +38,6 @@ jobs:
           publish_dir: ./passik/code-coverage/target/site/jacoco-aggregate
 
       - name: Generate Coverage Badge
-        uses: tj-actions/coverage-badge@v4
+        uses: tj-actions/coverage-badge@v1
         with:
           report_path: ./passik/code-coverage/target/site/jacoco-aggregate/index.html
