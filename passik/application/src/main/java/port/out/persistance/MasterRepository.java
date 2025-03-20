@@ -1,10 +1,11 @@
 package port.out.persistance;
 
-import de.daycu.passik.model.security.Master;
-import de.daycu.passik.model.security.MasterLogin;
-import de.daycu.passik.model.security.MasterPassword;
+import de.daycu.passik.model.auth.Master;
+import de.daycu.passik.model.auth.MasterLogin;
+import de.daycu.passik.model.auth.MasterPassword;
 
 public interface MasterRepository {
-    boolean register(MasterLogin masterLogin, MasterPassword masterPassword);
+    Master register(MasterLogin masterLogin, MasterPassword masterPassword);
     Master getMasterByLogin(MasterLogin masterLogin);
+    void delete(Master master);
 }
