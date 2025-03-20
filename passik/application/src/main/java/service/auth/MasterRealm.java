@@ -1,7 +1,7 @@
-package service.security;
+package service.auth;
 
-import de.daycu.passik.model.security.Master;
-import de.daycu.passik.model.security.MasterLogin;
+import de.daycu.passik.model.auth.Master;
+import de.daycu.passik.model.auth.MasterLogin;
 import lombok.AllArgsConstructor;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.realm.AuthenticatingRealm;

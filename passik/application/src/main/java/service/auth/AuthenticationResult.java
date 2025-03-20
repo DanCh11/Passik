@@ -1,4 +1,4 @@
-package service.security;
+package service.auth;
 
 /**
  * Helper record to track the success or failure of user's authentication.

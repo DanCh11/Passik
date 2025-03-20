@@ -1,6 +1,6 @@
-import de.daycu.passik.model.security.Master;
-import de.daycu.passik.model.security.MasterLogin;
-import de.daycu.passik.model.security.MasterPassword;
+import de.daycu.passik.model.auth.Master;
+import de.daycu.passik.model.auth.MasterLogin;
+import de.daycu.passik.model.auth.MasterPassword;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

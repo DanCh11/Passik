@@ -1,12 +1,12 @@
-package service.security;
+package service.auth;
 
-import de.daycu.passik.model.security.MasterLogin;
-import de.daycu.passik.model.security.MasterPassword;
+import de.daycu.passik.model.auth.MasterLogin;
+import de.daycu.passik.model.auth.MasterPassword;
 import lombok.AllArgsConstructor;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
-import port.in.security.AuthenticationUseCase;
+import port.in.auth.AuthenticationUseCase;
 
 /**
  *  Performs authentication by instantiating the users using UserSecurityManager

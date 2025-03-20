@@ -1,4 +1,4 @@
-package de.daycu.passik.model.security;
+package de.daycu.passik.model.auth;
 
 import java.util.Objects;
 
