@@ -1,4 +1,4 @@
-package service.security;
+package service.auth;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.mgt.DefaultSecurityManager;

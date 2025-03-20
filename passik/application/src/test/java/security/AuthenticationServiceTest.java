@@ -1,8 +1,8 @@
 package security;
 
-import de.daycu.passik.model.security.Master;
-import de.daycu.passik.model.security.MasterLogin;
-import de.daycu.passik.model.security.MasterPassword;
+import de.daycu.passik.model.auth.Master;
+import de.daycu.passik.model.auth.MasterLogin;
+import de.daycu.passik.model.auth.MasterPassword;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -11,9 +11,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import port.out.persistance.MasterRepository;
-import service.security.AuthenticationResult;
-import service.security.AuthenticationService;
-import service.security.MasterRealm;
+import service.auth.AuthenticationResult;
+import service.auth.AuthenticationService;
+import service.auth.MasterRealm;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.lenient;
