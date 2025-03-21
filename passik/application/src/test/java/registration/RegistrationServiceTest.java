@@ -1,4 +1,4 @@
-package security;
+package registration;
 
 import de.daycu.passik.model.auth.Master;
 import de.daycu.passik.model.auth.MasterLogin;
