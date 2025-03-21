@@ -5,8 +5,8 @@ import org.apache.shiro.crypto.SecureRandomNumberGenerator;
 
 public record Salt() {
 
-    public static Object generate() {
+    public static byte[] generate() {
         RandomNumberGenerator randomNumberGenerator = new SecureRandomNumberGenerator();
-        return randomNumberGenerator.nextBytes();
+        return randomNumberGenerator.nextBytes().getBytes();
     }
 }
