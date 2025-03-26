@@ -6,35 +6,42 @@ import de.daycu.passik.model.auth.MasterPassword;
 import lombok.AllArgsConstructor;
 import port.in.registration.RegistrationUseCase;
 import port.out.persistance.MasterRepository;
+import service.encryption.EncryptionService;
 
 @AllArgsConstructor
 public class RegistrationService implements RegistrationUseCase {
 
     public MasterRepository masterRepository;
+    public EncryptionService encryptionService;
 
     @Override
     public Master register(MasterLogin masterLogin, MasterPassword masterPassword) {
-<span class="fc" id="L17">        isPasswordValid(masterPassword);</span>
+<span class="fc" id="L19">        isPasswordValid(masterPassword);</span>
+<span class="fc" id="L20">        MasterPassword encodedMasterPassword = encodePassword(masterPassword);</span>
 
-        // TODO: add encryption of master password and the salt.
-        // TODO: don't forget to save salt in database if necessary
-<span class="fc" id="L21">        return masterRepository.register(masterLogin, masterPassword);</span>
+<span class="fc" id="L22">        return masterRepository.register(masterLogin, encodedMasterPassword);</span>
+    }
+
+    private MasterPassword encodePassword(MasterPassword masterPassword) {
+<span class="fc" id="L26">        String encryption = encryptionService.encodePassword(masterPassword);</span>
+
+<span class="fc" id="L28">        return new MasterPassword(encryption);</span>
     }
 
     private static void isPasswordValid(MasterPassword masterPassword) {
-<span class="fc" id="L25">        final String masterPasswordValue = masterPassword.value();</span>
-<span class="fc" id="L26">        final boolean hasUpperCase = masterPasswordValue.matches(&quot;.*[A-Z].*&quot;);</span>
-<span class="fc" id="L27">        final boolean hasDigits = masterPasswordValue.matches(&quot;.*\\d.*&quot;);</span>
-<span class="fc" id="L28">        final boolean hasSpecialCharacters = masterPasswordValue.matches(&quot;.*[^a-zA-Z0-9].*&quot;);</span>
+<span class="fc" id="L32">        final String masterPasswordValue = masterPassword.value();</span>
+<span class="fc" id="L33">        final boolean hasUpperCase = masterPasswordValue.matches(&quot;.*[A-Z].*&quot;);</span>
+<span class="fc" id="L34">        final boolean hasDigits = masterPasswordValue.matches(&quot;.*\\d.*&quot;);</span>
+<span class="fc" id="L35">        final boolean hasSpecialCharacters = masterPasswordValue.matches(&quot;.*[^a-zA-Z0-9].*&quot;);</span>
 
-<span class="fc bfc" id="L30" title="All 2 branches covered.">        if (!hasUpperCase)</span>
-<span class="fc" id="L31">            throw new PasswordNotCompleteException(&quot;Make sure the password contains at least one upper case letter.&quot;);</span>
+<span class="fc bfc" id="L37" title="All 2 branches covered.">        if (!hasUpperCase)</span>
+<span class="fc" id="L38">            throw new PasswordNotCompleteException(&quot;Make sure the password contains at least one upper case letter.&quot;);</span>
 
-<span class="fc bfc" id="L33" title="All 2 branches covered.">        if (!hasDigits)</span>
-<span class="fc" id="L34">            throw new PasswordNotCompleteException(&quot;Make sure the password contains at least one digit.&quot;);</span>
+<span class="fc bfc" id="L40" title="All 2 branches covered.">        if (!hasDigits)</span>
+<span class="fc" id="L41">            throw new PasswordNotCompleteException(&quot;Make sure the password contains at least one digit.&quot;);</span>
 
-<span class="fc bfc" id="L36" title="All 2 branches covered.">        if (!hasSpecialCharacters)</span>
-<span class="fc" id="L37">            throw new PasswordNotCompleteException(&quot;Make sure the password contains at least one special character.&quot;);</span>
-<span class="fc" id="L38">    }</span>
+<span class="fc bfc" id="L43" title="All 2 branches covered.">        if (!hasSpecialCharacters)</span>
+<span class="fc" id="L44">            throw new PasswordNotCompleteException(&quot;Make sure the password contains at least one special character.&quot;);</span>
+<span class="fc" id="L45">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
