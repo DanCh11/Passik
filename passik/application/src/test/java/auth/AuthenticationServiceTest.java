@@ -1,4 +1,4 @@
-package security;
+package auth;
 
 import de.daycu.passik.model.auth.Master;
 import de.daycu.passik.model.auth.MasterLogin;
@@ -14,6 +14,7 @@ import port.out.persistance.MasterRepository;
 import service.auth.AuthenticationResult;
 import service.auth.AuthenticationService;
 import service.auth.MasterRealm;
+import service.encryption.EncryptionService;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.lenient;
@@ -24,18 +25,24 @@ public class AuthenticationServiceTest {
     private MasterLogin masterLogin;
     private MasterPassword masterPassword;
     private MasterRealm masterRealm;
-    @Mock
-    private MasterRepository masterRepository;
+    @Mock private MasterRepository masterRepository;
+    @Mock private EncryptionService encryptionService;
     private AuthenticationService authenticationService;
 
     @BeforeEach
     void init() {
+        final String encodedPassword = "encodedPassword";
         masterLogin = new MasterLogin("masterLogin");
         masterPassword = new MasterPassword("masterPassword");
-        Master master = new Master(masterLogin, masterPassword);
-        masterRealm = new MasterRealm(masterRepository);
+        masterRealm = new MasterRealm(masterRepository, encryptionService);
+        MasterPassword encodedMasterPassword = new MasterPassword(encodedPassword);
+        Master master = new Master(masterLogin, encodedMasterPassword);
+
+        lenient().when(encryptionService.encodePassword(masterPassword)).thenReturn(encodedPassword);
+        lenient().when(encryptionService.verifyPassword(masterPassword, encodedPassword)).thenReturn(true);
         lenient().when(masterRepository.getMasterByLogin(masterLogin)).thenReturn(master);
     }
+
 
     @Test
     @DisplayName("Testing successful authentication")

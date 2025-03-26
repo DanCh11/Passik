@@ -6,19 +6,26 @@ import de.daycu.passik.model.auth.MasterPassword;
 import lombok.AllArgsConstructor;
 import port.in.registration.RegistrationUseCase;
 import port.out.persistance.MasterRepository;
+import service.encryption.EncryptionService;
 
 @AllArgsConstructor
 public class RegistrationService implements RegistrationUseCase {
 
     public MasterRepository masterRepository;
+    public EncryptionService encryptionService;
 
     @Override
     public Master register(MasterLogin masterLogin, MasterPassword masterPassword) {
         isPasswordValid(masterPassword);
+        MasterPassword encodedMasterPassword = encodePassword(masterPassword);
 
-        // TODO: add encryption of master password and the salt.
-        // TODO: don't forget to save salt in database if necessary
-        return masterRepository.register(masterLogin, masterPassword);
+        return masterRepository.register(masterLogin, encodedMasterPassword);
+    }
+
+    private MasterPassword encodePassword(MasterPassword masterPassword) {
+        String encryption = encryptionService.encodePassword(masterPassword);
+
+        return new MasterPassword(encryption);
     }
 
     private static void isPasswordValid(MasterPassword masterPassword) {
