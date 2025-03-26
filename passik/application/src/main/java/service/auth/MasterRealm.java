@@ -2,18 +2,22 @@ package service.auth;
 
 import de.daycu.passik.model.auth.Master;
 import de.daycu.passik.model.auth.MasterLogin;
-import lombok.AllArgsConstructor;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.realm.AuthenticatingRealm;
 import port.out.persistance.MasterRepository;
+import service.encryption.EncryptionService;
 
 /**
  * Creates a realm to interact with users' authentication data.
  */
-@AllArgsConstructor
 public class MasterRealm extends AuthenticatingRealm {
 
-    private MasterRepository masterRepository;
+    private final MasterRepository masterRepository;
+
+    public MasterRealm(MasterRepository masterRepository, EncryptionService encryptionService) {
+        this.masterRepository = masterRepository;
+        setCredentialsMatcher(new EncryptionCredentialMatcher(encryptionService));
+    }
 
     /**
      * Retrieves authentication information of the user.
