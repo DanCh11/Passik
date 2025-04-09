@@ -1,6 +1,7 @@
 package service.encryption;
 
 import de.daycu.passik.model.auth.Password;
+import de.daycu.passik.model.vault.CredentialPassword;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 
 /**
@@ -23,10 +24,21 @@ public class EncryptionService {
     }
 
     public String encodePassword(Password rawPassword) {
-        return encoder.encode(rawPassword.getRawPassword());
+        return encoder.encode(rawPassword.rawPassword());
     }
 
     public boolean verifyPassword(Password rawPassword, String storedRawPassword) {
-        return encoder.matches(rawPassword.getRawPassword(), storedRawPassword);
+        return encoder.matches(rawPassword.rawPassword(), storedRawPassword);
+    }
+
+    /**
+     * TODO: Make this method generic for Master password as well
+     */
+    public CredentialPassword encodeCredentialPassword(Password credentialPassword) {
+        try {
+            return new CredentialPassword(encodePassword(credentialPassword));
+        } catch (Exception e) {
+            throw new CredentialEncryptionException("Failed to encrypt password", e);
+        }
     }
 }

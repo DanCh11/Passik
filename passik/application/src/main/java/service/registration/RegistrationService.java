@@ -8,28 +8,33 @@ import port.in.registration.RegistrationUseCase;
 import port.out.persistance.MasterRepository;
 import service.encryption.EncryptionService;
 
+import java.util.function.Function;
+
 @AllArgsConstructor
 public class RegistrationService implements RegistrationUseCase {
 
     public MasterRepository masterRepository;
     public EncryptionService encryptionService;
 
+    private final Function<MasterPassword, MasterPassword> encodePassword =
+            credentialPassword ->  {
+                String encodedPassword = encryptionService.encodePassword(credentialPassword);
+                return new MasterPassword(encodedPassword);
+            };
+
     @Override
     public Master register(MasterLogin masterLogin, MasterPassword masterPassword) {
         isPasswordValid(masterPassword);
-        MasterPassword encodedMasterPassword = encodePassword(masterPassword);
+        MasterPassword encodedMasterPassword = encodePassword.apply(masterPassword);
 
         return masterRepository.register(masterLogin, encodedMasterPassword);
     }
 
-    private MasterPassword encodePassword(MasterPassword masterPassword) {
-        String encryption = encryptionService.encodePassword(masterPassword);
-
-        return new MasterPassword(encryption);
-    }
-
+    /**
+     * TODO: find a library to have password validity check directly in records or interface.
+     */
     private static void isPasswordValid(MasterPassword masterPassword) {
-        final String masterPasswordValue = masterPassword.value();
+        final String masterPasswordValue = masterPassword.rawPassword();
         final boolean hasUpperCase = masterPasswordValue.matches(".*[A-Z].*");
         final boolean hasDigits = masterPasswordValue.matches(".*\\d.*");
         final boolean hasSpecialCharacters = masterPasswordValue.matches(".*[^a-zA-Z0-9].*");

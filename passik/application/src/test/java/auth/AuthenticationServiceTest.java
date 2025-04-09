@@ -72,13 +72,13 @@ public class AuthenticationServiceTest {
     @Test
     @DisplayName("Testing not registered account")
     public void testNotRegisteredAccountException() {
-         masterLogin = new MasterLogin("unknownLogin");
-         masterPassword = new MasterPassword("unknownPassword");
-         authenticationService = new AuthenticationService(masterRealm);
+        masterLogin = new MasterLogin("unknownLogin");
+        masterPassword = new MasterPassword("unknownPassword");
+        authenticationService = new AuthenticationService(masterRealm);
 
-         UnknownAccountException exception = assertThrows(UnknownAccountException.class,
-                 () -> authenticationService.authenticate(masterLogin, masterPassword));
+        UnknownAccountException exception = assertThrows(UnknownAccountException.class,
+             () -> authenticationService.authenticate(masterLogin, masterPassword));
 
-         assertEquals("Account is not registered.", exception.getMessage());
+        assertEquals("Account is not registered.", exception.getMessage());
     }
 }
