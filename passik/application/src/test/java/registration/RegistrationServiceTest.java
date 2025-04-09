@@ -50,7 +50,7 @@ public class RegistrationServiceTest {
         verify(masterRepository).register(eq(masterLogin), passwordCaptor.capture());
         MasterPassword actualPassedPassword = passwordCaptor.getValue();
 
-        assertEquals(encodedPassword, actualPassedPassword.getRawPassword());
+        assertEquals(encodedPassword, actualPassedPassword.rawPassword());
         assertEquals(master, successfulRegistration);
     }
 

@@ -34,7 +34,7 @@ public class MasterRealm extends AuthenticatingRealm {
 
         return new SimpleAuthenticationInfo(
                 master.masterLogin().value(),
-                master.masterPassword().value(),
+                master.masterPassword().rawPassword(),
                 getName());
     }
 }

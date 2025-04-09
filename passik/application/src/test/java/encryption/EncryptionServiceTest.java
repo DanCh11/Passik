@@ -25,7 +25,7 @@ public class EncryptionServiceTest {
         String encoder = encryptionService.encodePassword(masterPassword);
 
         assertNotNull(encoder);
-        assertNotEquals(encoder, masterPassword.getRawPassword());
+        assertNotEquals(encoder, masterPassword.rawPassword());
     }
 
     @Test

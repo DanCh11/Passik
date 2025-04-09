@@ -25,7 +25,7 @@ public class EntityCreationTest {
                 () -> new Master(new MasterLogin("login"), null));
 
         assertEquals("'value' must not be null", MasterLoginNullException.getMessage());
-        assertEquals("'value' must not be null", MasterPasswordNullException.getMessage());
+        assertEquals("'rawPassword' must not be null", MasterPasswordNullException.getMessage());
         assertEquals("'masterLogin' shall not be null", MasterNullLoginException.getMessage());
         assertEquals("'masterPassword' shall not be null", MasterNullPasswordException.getMessage());
     }
@@ -39,6 +39,6 @@ public class EntityCreationTest {
                 () -> new MasterPassword(""));
 
         assertEquals("'value' must not be empty", MasterLoginNullException.getMessage());
-        assertEquals("'value' must not be empty", MasterPasswordNullException.getMessage());
+        assertEquals("'rawPassword' must not be empty", MasterPasswordNullException.getMessage());
     }
 }
