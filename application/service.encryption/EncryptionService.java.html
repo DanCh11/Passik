@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>EncryptionService.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">code-coverage</a> &gt; <a href="../index.html" class="el_bundle">application</a> &gt; <a href="index.source.html" class="el_package">service.encryption</a> &gt; <span class="el_source">EncryptionService.java</span></div><h1>EncryptionService.java</h1><pre class="source lang-java linenums">package service.encryption;
 
 import de.daycu.passik.model.auth.Password;
+import de.daycu.passik.model.vault.CredentialPassword;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 
 /**
@@ -13,21 +14,32 @@ public class EncryptionService {
     /**
      * Instantiates an Argon2 encoder with required parameters.
      */
-<span class="fc" id="L16">    public EncryptionService() {</span>
-<span class="fc" id="L17">        final int hashLength = 32;</span>
-<span class="fc" id="L18">        final int saltLength = 16;</span>
-<span class="fc" id="L19">        final int parallelism = 1;</span>
-<span class="fc" id="L20">        final int memoryLimit = 66536;</span>
-<span class="fc" id="L21">        final int iterations = 2;</span>
-<span class="fc" id="L22">        this.encoder = new Argon2PasswordEncoder(saltLength, hashLength, parallelism, memoryLimit, iterations);</span>
-<span class="fc" id="L23">    }</span>
+<span class="fc" id="L17">    public EncryptionService() {</span>
+<span class="fc" id="L18">        final int hashLength = 32;</span>
+<span class="fc" id="L19">        final int saltLength = 16;</span>
+<span class="fc" id="L20">        final int parallelism = 1;</span>
+<span class="fc" id="L21">        final int memoryLimit = 66536;</span>
+<span class="fc" id="L22">        final int iterations = 2;</span>
+<span class="fc" id="L23">        this.encoder = new Argon2PasswordEncoder(saltLength, hashLength, parallelism, memoryLimit, iterations);</span>
+<span class="fc" id="L24">    }</span>
 
     public String encodePassword(Password rawPassword) {
-<span class="fc" id="L26">        return encoder.encode(rawPassword.getRawPassword());</span>
+<span class="fc" id="L27">        return encoder.encode(rawPassword.rawPassword());</span>
     }
 
     public boolean verifyPassword(Password rawPassword, String storedRawPassword) {
-<span class="fc" id="L30">        return encoder.matches(rawPassword.getRawPassword(), storedRawPassword);</span>
+<span class="fc" id="L31">        return encoder.matches(rawPassword.rawPassword(), storedRawPassword);</span>
+    }
+
+    /**
+     * TODO: Make this method generic for Master password as well
+     */
+    public CredentialPassword encodeCredentialPassword(Password credentialPassword) {
+        try {
+<span class="nc" id="L39">            return new CredentialPassword(encodePassword(credentialPassword));</span>
+<span class="nc" id="L40">        } catch (Exception e) {</span>
+<span class="nc" id="L41">            throw new CredentialEncryptionException(&quot;Failed to encrypt password&quot;, e);</span>
+        }
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

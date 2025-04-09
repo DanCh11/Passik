@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>DigitalAccountService.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">code-coverage</a> &gt; <a href="../index.html" class="el_bundle">application</a> &gt; <a href="index.source.html" class="el_package">service.vault</a> &gt; <span class="el_source">DigitalAccountService.java</span></div><h1>DigitalAccountService.java</h1><pre class="source lang-java linenums">package service.vault;
+
+import de.daycu.passik.model.vault.CredentialPassword;
+import de.daycu.passik.model.vault.Credentials;
+import de.daycu.passik.model.vault.DigitalAccount;
+import de.daycu.passik.model.vault.DigitalServiceName;
+import lombok.AllArgsConstructor;
+import port.in.vault.DigitalAccountUseCase;
+import port.out.persistance.DigitalAccountRepository;
+import service.encryption.EncryptionService;
+import service.vault.exception.*;
+
+@AllArgsConstructor
+public class DigitalAccountService implements DigitalAccountUseCase {
+    
+    private final DigitalAccountRepository digitalAccountRepository;
+    private final EncryptionService encryptionService;
+
+    @Override
+    public DigitalAccount save(DigitalAccount digitalAccount) {
+<span class="fc bfc" id="L21" title="All 2 branches covered.">        if (digitalAccountRepository.findByDigitalServiceName(digitalAccount.digitalServiceName()) != null)</span>
+<span class="fc" id="L22">            throw new DuplicateAccountException(</span>
+<span class="fc" id="L23">                    &quot;Account already exists for service: %s&quot;.formatted(digitalAccount.digitalServiceName()));</span>
+
+<span class="fc" id="L25">        DigitalAccount encryptedDigitalAccount = createEncryptedDigitalAccount(digitalAccount);</span>
+
+<span class="fc" id="L27">        return digitalAccountRepository.save(encryptedDigitalAccount);</span>
+    }
+
+    @Override
+    public DigitalAccount update(DigitalServiceName digitalServiceName, DigitalAccount updatedAccount) {
+<span class="fc" id="L32">        DigitalAccount existingDigitalAccount = digitalAccountRepository.findByDigitalServiceName(digitalServiceName);</span>
+
+<span class="fc bfc" id="L34" title="All 2 branches covered.">        if (existingDigitalAccount == null)</span>
+<span class="fc" id="L35">            throw new DigitalAccountNotFoundException(</span>
+<span class="fc" id="L36">                    &quot;Digital account not found for service: %s&quot;.formatted(digitalServiceName));</span>
+
+<span class="fc" id="L38">        CredentialPassword encryptedCredentialPassword = encryptionService</span>
+<span class="fc" id="L39">                .encodeCredentialPassword(updatedAccount.credentials().credentialPassword());</span>
+
+<span class="fc" id="L41">        DigitalAccount updatedDigitalAccountCredentials = existingDigitalAccount.toBuilder()</span>
+<span class="fc" id="L42">                .credentials(new Credentials(updatedAccount.credentials().credentialLogin(), encryptedCredentialPassword))</span>
+<span class="fc" id="L43">                .build();</span>
+
+<span class="fc" id="L45">        return digitalAccountRepository.save(updatedDigitalAccountCredentials);</span>
+    }
+
+    @Override
+    public DigitalAccountDeletionResult delete(DigitalAccount digitalAccount) {
+<span class="fc" id="L50">        DigitalAccount existingDigitalAccount = digitalAccountRepository</span>
+<span class="fc" id="L51">                .findByDigitalServiceName(digitalAccount.digitalServiceName());</span>
+
+<span class="pc bpc" id="L53" title="1 of 2 branches missed.">        if (existingDigitalAccount == null)</span>
+<span class="nc" id="L54">            throw new DigitalAccountNotFoundException(</span>
+<span class="nc" id="L55">                    &quot;Digital account not found for service: %s&quot;.formatted(digitalAccount.digitalServiceName()));</span>
+
+<span class="fc" id="L57">        digitalAccountRepository.delete(existingDigitalAccount);</span>
+
+<span class="fc" id="L59">        return new DigitalAccountDeletionResult(true,</span>
+<span class="fc" id="L60">                &quot;Digital account deleted successfully for service: %s&quot;.formatted(digitalAccount.digitalServiceName()));</span>
+    }
+
+    private DigitalAccount createEncryptedDigitalAccount(DigitalAccount digitalAccount) {
+<span class="fc" id="L64">        CredentialPassword encodedCredentialPassword = encryptionService.encodeCredentialPassword(</span>
+<span class="fc" id="L65">                digitalAccount.credentials().credentialPassword());</span>
+
+<span class="fc" id="L67">        return digitalAccount.toBuilder()</span>
+<span class="fc" id="L68">                .credentials(new Credentials(digitalAccount.credentials().credentialLogin(), encodedCredentialPassword))</span>
+<span class="fc" id="L69">                .build();</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

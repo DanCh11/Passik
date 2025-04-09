@@ -22,7 +22,7 @@ public class AuthenticationService implements AuthenticationUseCase {
     public AuthenticationResult authenticate(MasterLogin masterLogin, MasterPassword masterPassword) {
 
 <span class="fc" id="L24">        UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(</span>
-<span class="fc" id="L25">                masterLogin.value(), masterPassword.value());</span>
+<span class="fc" id="L25">                masterLogin.value(), masterPassword.rawPassword());</span>
 <span class="fc" id="L26">        Subject user = new PassikSecurityManager(masterRealm).configure();</span>
 
         try {
