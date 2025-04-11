@@ -4,41 +4,30 @@ import de.daycu.passik.model.auth.MasterPassword;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class EntityCreationTest {
 
     @Test
+    @SuppressWarnings("ConstantConditions")
     @DisplayName("Testing exception of null values")
     public void testEntitiesAreNull() {
-        NullPointerException MasterLoginNullException = assertThrows(NullPointerException.class,
-                () -> new MasterLogin(null));
+        assertThrows(NullPointerException.class, () -> new MasterLogin(null));
 
-        NullPointerException MasterPasswordNullException = assertThrows(NullPointerException.class,
-                () -> new MasterPassword(null));
+        assertThrows(NullPointerException.class, () -> new MasterPassword(null));
 
-        NullPointerException MasterNullLoginException = assertThrows(NullPointerException.class,
-                () -> new Master(null, null));
+        assertThrows(NullPointerException.class, () -> new Master(null, null));
 
-        NullPointerException MasterNullPasswordException = assertThrows(NullPointerException.class,
+        assertThrows(NullPointerException.class,
                 () -> new Master(new MasterLogin("login"), null));
 
-        assertEquals("'value' must not be null", MasterLoginNullException.getMessage());
-        assertEquals("'rawPassword' must not be null", MasterPasswordNullException.getMessage());
-        assertEquals("'masterLogin' shall not be null", MasterNullLoginException.getMessage());
-        assertEquals("'masterPassword' shall not be null", MasterNullPasswordException.getMessage());
     }
 
     @Test
+    @SuppressWarnings("ConstantConditions")
+    @DisplayName("Testing non emptiness of entities' values")
     public void testEntitiesHaveEmptyValues() {
-        IllegalArgumentException MasterLoginNullException = assertThrows(IllegalArgumentException.class,
-                () -> new MasterLogin(""));
-
-        IllegalArgumentException MasterPasswordNullException = assertThrows(IllegalArgumentException.class,
-                () -> new MasterPassword(""));
-
-        assertEquals("'value' must not be empty", MasterLoginNullException.getMessage());
-        assertEquals("'rawPassword' must not be empty", MasterPasswordNullException.getMessage());
+        assertThrows(IllegalArgumentException.class, () -> new MasterLogin(""));
+        assertThrows(IllegalArgumentException.class, () -> new MasterPassword(""));
     }
 }

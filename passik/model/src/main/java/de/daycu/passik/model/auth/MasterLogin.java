@@ -1,11 +1,10 @@
 package de.daycu.passik.model.auth;
 
-import java.util.Objects;
+import lombok.NonNull;
 
-public record MasterLogin(String value) {
+public record MasterLogin(@NonNull String value) {
 
     public MasterLogin {
-        Objects.requireNonNull(value, "'value' must not be null");
         if (value.isEmpty()) throw new IllegalArgumentException("'value' must not be empty");
     }
 }

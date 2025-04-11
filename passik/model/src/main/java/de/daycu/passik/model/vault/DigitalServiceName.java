@@ -1,11 +1,10 @@
 package de.daycu.passik.model.vault;
 
-import java.util.Objects;
+import lombok.NonNull;
 
-public record DigitalServiceName(String name) {
-    
+public record DigitalServiceName(@NonNull String name) {
+
     public DigitalServiceName {
-        Objects.requireNonNull(name, "'name' must not be null");
         if (name.isEmpty()) throw new IllegalArgumentException("'name' must not be empty");
     }
 }
