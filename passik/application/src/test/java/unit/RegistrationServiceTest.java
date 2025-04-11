@@ -1,7 +1,6 @@
-package registration;
+package unit;
 
 import de.daycu.passik.model.auth.Master;
-import de.daycu.passik.model.auth.MasterLogin;
 import de.daycu.passik.model.auth.MasterPassword;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,6 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.verify;
+import static utils.Fixtures.*;
 
 @ExtendWith(MockitoExtension.class)
 public class RegistrationServiceTest {
@@ -26,31 +26,25 @@ public class RegistrationServiceTest {
     @Mock private MasterRepository masterRepository;
     @Mock private EncryptionService encryptionService;
     private RegistrationService registrationService;
-    private MasterLogin masterLogin;
-    private MasterPassword masterPassword;
     private Master master;
 
     @Test
     @DisplayName("Testing successful registration")
     public void testSuccessfulRegistration() {
-        final String encodedPassword = "encodedPassword";
+        master = new Master(basicMasterLogin, encodedMasterPassword);
 
-        masterLogin = new MasterLogin("masterLogin");
-        masterPassword = new MasterPassword("MasterPassword1!");
-        MasterPassword encodedMasterPassword = new MasterPassword(encodedPassword);
-        master = new Master(masterLogin, encodedMasterPassword);
-
-        lenient().when(encryptionService.encodePassword(masterPassword)).thenReturn(encodedPassword);
-        lenient().when(masterRepository.register(masterLogin, encodedMasterPassword)).thenReturn(master);
+        lenient().when(encryptionService.encodePassword(canonicalMasterPassword))
+                .thenReturn(encodedMasterPassword.rawPassword());
+        lenient().when(masterRepository.register(basicMasterLogin, encodedMasterPassword)).thenReturn(master);
 
         registrationService = new RegistrationService(masterRepository, encryptionService);
-        Master successfulRegistration = registrationService.register(masterLogin, masterPassword);
+        Master successfulRegistration = registrationService.register(basicMasterLogin, canonicalMasterPassword);
 
         ArgumentCaptor<MasterPassword> passwordCaptor = ArgumentCaptor.forClass(MasterPassword.class);
-        verify(masterRepository).register(eq(masterLogin), passwordCaptor.capture());
+        verify(masterRepository).register(eq(basicMasterLogin), passwordCaptor.capture());
         MasterPassword actualPassedPassword = passwordCaptor.getValue();
 
-        assertEquals(encodedPassword, actualPassedPassword.rawPassword());
+        assertEquals(encodedMasterPassword.rawPassword(), actualPassedPassword.rawPassword());
         assertEquals(master, successfulRegistration);
     }
 
@@ -58,35 +52,31 @@ public class RegistrationServiceTest {
     @DisplayName("Testing registration of password without upper case")
     public void testPasswordMissingUpperCaseLetter() {
         final String upperCaseLetterMissingMessage = "Make sure the password contains at least one upper case letter.";
-        masterPassword = new MasterPassword("masterpassword1!");
 
-        assertMissingPasswordCriteriaException(masterPassword, upperCaseLetterMissingMessage);
+        assertMissingPasswordCriteriaException(missingUpperCaseMasterPassword, upperCaseLetterMissingMessage);
     }
 
     @Test
     public void testPasswordMissingDigit() {
         final String digitMissingMessage = "Make sure the password contains at least one digit.";
-        masterPassword = new MasterPassword("MasterPassword!");
 
-        assertMissingPasswordCriteriaException(masterPassword, digitMissingMessage);
+        assertMissingPasswordCriteriaException(missingDigitMasterPassword, digitMissingMessage);
     }
 
     @Test
     public void testPasswordMissingSpecialCharacter() {
         final String specialCharacterMissingMessage = "Make sure the password contains at least one special character.";
-        masterPassword = new MasterPassword("MasterPassword1");
 
-        assertMissingPasswordCriteriaException(masterPassword, specialCharacterMissingMessage);
+        assertMissingPasswordCriteriaException(missingSpecialCharacterMasterPassword, specialCharacterMissingMessage);
     }
 
     private void assertMissingPasswordCriteriaException(MasterPassword masterPassword, String expectedExceptionMessage) {
-        masterLogin = new MasterLogin("masterLogin");
-        master = new Master(masterLogin, masterPassword);
+        master = new Master(basicMasterLogin, masterPassword);
         registrationService = new RegistrationService(masterRepository, encryptionService);
-        lenient().when(masterRepository.register(masterLogin, masterPassword)).thenReturn(master);
+        lenient().when(masterRepository.register(basicMasterLogin, masterPassword)).thenReturn(master);
 
         PasswordNotCompleteException exception = assertThrows(PasswordNotCompleteException.class,
-                () -> registrationService.register(masterLogin, masterPassword));
+                () -> registrationService.register(basicMasterLogin, masterPassword));
 
         assertEquals(expectedExceptionMessage, exception.getMessage());
     }
