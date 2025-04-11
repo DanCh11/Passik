@@ -1,11 +1,5 @@
 package de.daycu.passik.model.auth;
 
-import java.util.Objects;
+import lombok.NonNull;
 
-public record Master(MasterLogin masterLogin, MasterPassword masterPassword) {
-
-    public Master {
-        Objects.requireNonNull(masterLogin, "'masterLogin' shall not be null");
-        Objects.requireNonNull(masterPassword, "'masterPassword' shall not be null");
-    }
-}
+public record Master(@NonNull MasterLogin masterLogin, @NonNull MasterPassword masterPassword) { }
