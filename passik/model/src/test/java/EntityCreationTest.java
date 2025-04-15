@@ -1,8 +1,11 @@
 import de.daycu.passik.model.auth.Master;
+import de.daycu.passik.model.auth.MasterId;
 import de.daycu.passik.model.auth.MasterLogin;
 import de.daycu.passik.model.auth.MasterPassword;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -16,10 +19,12 @@ public class EntityCreationTest {
 
         assertThrows(NullPointerException.class, () -> new MasterPassword(null));
 
-        assertThrows(NullPointerException.class, () -> new Master(null, null));
+        assertThrows(NullPointerException.class, () -> new MasterId(null));
+
+        assertThrows(NullPointerException.class, () -> new Master(null,null, null));
 
         assertThrows(NullPointerException.class,
-                () -> new Master(new MasterLogin("login"), null));
+                () -> new Master(new MasterId(UUID.randomUUID()), new MasterLogin("login"), null));
 
     }
 
