@@ -31,7 +31,7 @@ public class RegistrationServiceTest {
     @Test
     @DisplayName("Testing successful registration")
     public void testSuccessfulRegistration() {
-        master = new Master(basicMasterLogin, encodedMasterPassword);
+        master = new Master(masterid, basicMasterLogin, encodedMasterPassword);
 
         lenient().when(encryptionService.encodePassword(canonicalMasterPassword))
                 .thenReturn(encodedMasterPassword.rawPassword());
@@ -71,7 +71,7 @@ public class RegistrationServiceTest {
     }
 
     private void assertMissingPasswordCriteriaException(MasterPassword masterPassword, String expectedExceptionMessage) {
-        master = new Master(basicMasterLogin, masterPassword);
+        master = new Master(masterid, basicMasterLogin, masterPassword);
         registrationService = new RegistrationService(masterRepository, encryptionService);
         lenient().when(masterRepository.register(basicMasterLogin, masterPassword)).thenReturn(master);
 

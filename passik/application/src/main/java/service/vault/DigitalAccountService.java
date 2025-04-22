@@ -1,5 +1,6 @@
 package service.vault;
 
+import de.daycu.passik.model.auth.MasterId;
 import de.daycu.passik.model.vault.CredentialPassword;
 import de.daycu.passik.model.vault.Credentials;
 import de.daycu.passik.model.vault.DigitalAccount;
@@ -10,6 +11,8 @@ import port.out.persistance.DigitalAccountRepository;
 import service.encryption.EncryptionService;
 import service.vault.exception.*;
 
+import java.util.List;
+
 @AllArgsConstructor
 public class DigitalAccountService implements DigitalAccountUseCase {
     
@@ -18,7 +21,8 @@ public class DigitalAccountService implements DigitalAccountUseCase {
 
     @Override
     public DigitalAccount save(DigitalAccount digitalAccount) {
-        if (digitalAccountRepository.findByDigitalServiceName(digitalAccount.digitalServiceName()) != null)
+        if (digitalAccountRepository.findByDigitalServiceName(
+                digitalAccount.masterId(), digitalAccount.digitalServiceName()) != null)
             throw new DuplicateAccountException(
                     "Account already exists for service: %s".formatted(digitalAccount.digitalServiceName()));
 
@@ -28,8 +32,14 @@ public class DigitalAccountService implements DigitalAccountUseCase {
     }
 
     @Override
+    public List<DigitalAccount> findAllByMasterId(MasterId masterId) {
+        return digitalAccountRepository.findAllByMasterId(masterId);
+    }
+
+    @Override
     public DigitalAccount update(DigitalServiceName digitalServiceName, DigitalAccount updatedAccount) {
-        DigitalAccount existingDigitalAccount = digitalAccountRepository.findByDigitalServiceName(digitalServiceName);
+        DigitalAccount existingDigitalAccount = digitalAccountRepository.findByDigitalServiceName(
+                updatedAccount.masterId(), digitalServiceName);
 
         if (existingDigitalAccount == null)
             throw new DigitalAccountNotFoundException(
@@ -48,7 +58,7 @@ public class DigitalAccountService implements DigitalAccountUseCase {
     @Override
     public DigitalAccountDeletionResult delete(DigitalAccount digitalAccount) {
         DigitalAccount existingDigitalAccount = digitalAccountRepository
-                .findByDigitalServiceName(digitalAccount.digitalServiceName());
+                .findByDigitalServiceName(digitalAccount.masterId(), digitalAccount.digitalServiceName());
 
         if (existingDigitalAccount == null)
             throw new DigitalAccountNotFoundException(
