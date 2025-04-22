@@ -8,14 +8,15 @@ import service.encryption.EncryptionService;
 /**
  * Security Initializations on startup to create master's realm.
  */
-public class AppSecurityInitializer {
+public class AppSecurityManager {
+
+    private static boolean initialized = false;
+
     /**
      * Prevents multiple creation of the same instance. If the instance runs multiple times, then shiro is reconfigured
      * which can potentially break the thread state or user sessions.
      */
-    private static boolean initialized = false;
-
-    public static void initializeSecurity(MasterRepository masterRepository, EncryptionService encryptionService) {
+    public static synchronized void initialize(MasterRepository masterRepository, EncryptionService encryptionService) {
         if (initialized) return;
 
         MasterRealm masterRealm = new MasterRealm(masterRepository, encryptionService);
@@ -24,4 +25,12 @@ public class AppSecurityInitializer {
 
         initialized = true;
     }
+
+    /**
+     * Resets the initialized flag. This is useful for testing.
+     */
+    public static synchronized void reset() {
+        initialized = false;
+    }
+
 }
