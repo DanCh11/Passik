@@ -2,6 +2,7 @@ package service.auth;
 
 import de.daycu.passik.model.auth.Master;
 import de.daycu.passik.model.auth.MasterLogin;
+import lombok.NonNull;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.realm.AuthenticatingRealm;
 import port.out.persistance.MasterRepository;
@@ -10,11 +11,11 @@ import service.encryption.EncryptionService;
 /**
  * Creates a realm to interact with users' authentication data.
  */
-public class MasterRealm extends AuthenticatingRealm {
+public final class MasterRealm extends AuthenticatingRealm {
 
     private final MasterRepository masterRepository;
 
-    public MasterRealm(MasterRepository masterRepository, EncryptionService encryptionService) {
+    public MasterRealm(@NonNull MasterRepository masterRepository, @NonNull EncryptionService encryptionService) {
         this.masterRepository = masterRepository;
         setCredentialsMatcher(new EncryptionCredentialMatcher(encryptionService));
     }
