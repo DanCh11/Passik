@@ -1,6 +1,7 @@
 package unit;
 
 import de.daycu.passik.model.auth.Master;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,7 +11,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import port.out.persistance.MasterRepository;
-import service.auth.AppSecurityInitializer;
+import service.auth.AppSecurityManager;
 import service.auth.AuthenticationResult;
 import service.auth.AuthenticationService;
 import service.encryption.EncryptionService;
@@ -28,8 +29,10 @@ public class AuthenticationServiceTest {
 
     @BeforeEach
     void init() {
+        SecurityUtils.setSecurityManager(null);
+        AppSecurityManager.reset();
+        AppSecurityManager.initialize(masterRepository, encryptionService);
         Master master = new Master(masterid, basicMasterLogin, encodedMasterPassword);
-        AppSecurityInitializer.initializeSecurity(masterRepository, encryptionService);
         authenticationService = new AuthenticationService();
 
         lenient().when(encryptionService.encodePassword(basicMasterPassword))
@@ -38,7 +41,6 @@ public class AuthenticationServiceTest {
                 .thenReturn(true);
         lenient().when(masterRepository.getMasterByLogin(basicMasterLogin)).thenReturn(master);
     }
-
 
     @Test
     @DisplayName("Testing successful authentication")
