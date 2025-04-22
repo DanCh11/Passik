@@ -2,7 +2,6 @@ package service.auth;
 
 import de.daycu.passik.model.auth.MasterLogin;
 import de.daycu.passik.model.auth.MasterPassword;
-import lombok.AllArgsConstructor;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.IncorrectCredentialsException;
@@ -18,6 +17,7 @@ import port.in.auth.AuthenticationUseCase;
  */
 public class AuthenticationService implements AuthenticationUseCase {
 
+    // TODO: add masterLogin and masterPassword as variables for constructor
     public AuthenticationResult authenticate(MasterLogin masterLogin, MasterPassword masterPassword) {
         Subject user = SecurityUtils.getSubject();
         UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(
