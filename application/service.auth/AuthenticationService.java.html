@@ -2,35 +2,37 @@
 
 import de.daycu.passik.model.auth.MasterLogin;
 import de.daycu.passik.model.auth.MasterPassword;
-import lombok.AllArgsConstructor;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.IncorrectCredentialsException;
+import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import port.in.auth.AuthenticationUseCase;
 
 /**
- *  Performs authentication by instantiating the users using UserSecurityManager
- *  with injected UserRealm class.
+ *  Performs authentication by instantiating the users using UserSecurityManager.
  *
  *  @return successful authentication if the user is found. Else throws an exception.
  */
-@AllArgsConstructor
-public class AuthenticationService implements AuthenticationUseCase {
+<span class="fc" id="L18">public class AuthenticationService implements AuthenticationUseCase {</span>
 
-    private MasterRealm masterRealm;
-
+    // TODO: add masterLogin and masterPassword as variables for constructor
     public AuthenticationResult authenticate(MasterLogin masterLogin, MasterPassword masterPassword) {
-
-<span class="fc" id="L24">        UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(</span>
-<span class="fc" id="L25">                masterLogin.value(), masterPassword.rawPassword());</span>
-<span class="fc" id="L26">        Subject user = new PassikSecurityManager(masterRealm).configure();</span>
+<span class="fc" id="L22">        Subject user = SecurityUtils.getSubject();</span>
+<span class="fc" id="L23">        UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(</span>
+<span class="fc" id="L24">                masterLogin.value(), masterPassword.rawPassword());</span>
 
         try {
-<span class="fc" id="L29">            user.login(usernamePasswordToken);</span>
-<span class="fc" id="L30">            return new AuthenticationResult(true, &quot;Login was performed successfully.&quot;);</span>
-<span class="fc" id="L31">        } catch (IncorrectCredentialsException ice) {</span>
-<span class="fc" id="L32">            return new AuthenticationResult(false,</span>
-                    &quot;Invalid credentials provided. Please check your username and password.&quot;);
+<span class="fc" id="L27">            user.login(usernamePasswordToken);</span>
+<span class="fc" id="L28">            return new AuthenticationResult(true, &quot;Login was performed successfully.&quot;);</span>
+<span class="fc" id="L29">        } catch (IncorrectCredentialsException ice) {</span>
+<span class="fc" id="L30">            throw new IncorrectCredentialsException(</span>
+                    &quot;Invalid credentials provided. Please check your username and password.&quot;, ice);
+<span class="fc" id="L32">        } catch (UnknownAccountException uae) {</span>
+<span class="fc" id="L33">            throw new UnknownAccountException(&quot;Account is not registered&quot;, uae);</span>
+<span class="nc" id="L34">        } catch (AuthenticationException ae) {</span>
+<span class="nc" id="L35">            throw new AuthenticationException(&quot;Authentication failed due to error: &quot;, ae);</span>
         }
     }
 }

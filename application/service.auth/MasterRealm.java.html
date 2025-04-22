@@ -2,6 +2,7 @@
 
 import de.daycu.passik.model.auth.Master;
 import de.daycu.passik.model.auth.MasterLogin;
+import lombok.NonNull;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.realm.AuthenticatingRealm;
 import port.out.persistance.MasterRepository;
@@ -10,14 +11,14 @@ import service.encryption.EncryptionService;
 /**
  * Creates a realm to interact with users' authentication data.
  */
-public class MasterRealm extends AuthenticatingRealm {
+public final class MasterRealm extends AuthenticatingRealm {
 
     private final MasterRepository masterRepository;
 
-<span class="fc" id="L17">    public MasterRealm(MasterRepository masterRepository, EncryptionService encryptionService) {</span>
-<span class="fc" id="L18">        this.masterRepository = masterRepository;</span>
-<span class="fc" id="L19">        setCredentialsMatcher(new EncryptionCredentialMatcher(encryptionService));</span>
-<span class="fc" id="L20">    }</span>
+<span class="pc bpc" id="L18" title="2 of 4 branches missed.">    public MasterRealm(@NonNull MasterRepository masterRepository, @NonNull EncryptionService encryptionService) {</span>
+<span class="fc" id="L19">        this.masterRepository = masterRepository;</span>
+<span class="fc" id="L20">        setCredentialsMatcher(new EncryptionCredentialMatcher(encryptionService));</span>
+<span class="fc" id="L21">    }</span>
 
     /**
      * Retrieves authentication information of the user.
@@ -28,14 +29,14 @@ public class MasterRealm extends AuthenticatingRealm {
      */
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
-<span class="fc" id="L31">        MasterLogin masterLogin = new MasterLogin((String) token.getPrincipal());</span>
-<span class="fc" id="L32">        Master master = masterRepository.getMasterByLogin(masterLogin);</span>
-<span class="fc bfc" id="L33" title="All 2 branches covered.">        if (master == null) throw new UnknownAccountException(&quot;Account is not registered.&quot;);</span>
+<span class="fc" id="L32">        MasterLogin masterLogin = new MasterLogin((String) token.getPrincipal());</span>
+<span class="fc" id="L33">        Master master = masterRepository.getMasterByLogin(masterLogin);</span>
+<span class="fc bfc" id="L34" title="All 2 branches covered.">        if (master == null) throw new UnknownAccountException(&quot;Account is not registered.&quot;);</span>
 
-<span class="fc" id="L35">        return new SimpleAuthenticationInfo(</span>
-<span class="fc" id="L36">                master.masterLogin().value(),</span>
-<span class="fc" id="L37">                master.masterPassword().rawPassword(),</span>
-<span class="fc" id="L38">                getName());</span>
+<span class="fc" id="L36">        return new SimpleAuthenticationInfo(</span>
+<span class="fc" id="L37">                master.masterLogin().value(),</span>
+<span class="fc" id="L38">                master.masterPassword().rawPassword(),</span>
+<span class="fc" id="L39">                getName());</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
