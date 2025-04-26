@@ -8,44 +8,28 @@ import port.in.registration.RegistrationUseCase;
 import port.out.persistance.MasterRepository;
 import service.encryption.EncryptionService;
 
-import java.util.function.Function;
-
+/**
+ * Service responsible for registering new master accounts.
+ * Handles the encoding of the master password before persisting the account.
+ */
 @AllArgsConstructor
 public class RegistrationService implements RegistrationUseCase {
 
     public MasterRepository masterRepository;
     public EncryptionService encryptionService;
 
-    private final Function<MasterPassword, MasterPassword> encodePassword =
-            credentialPassword ->  {
-                String encodedPassword = encryptionService.encodePassword(credentialPassword);
-                return new MasterPassword(encodedPassword);
-            };
-
+    /**
+     * Registers a new master account.
+     * Encodes the provided master password before saving it via the repository.
+     * @param masterLogin The login details for the new master account.
+     * @param masterPassword The raw password for the new master account. This will be encoded.
+     * @return The newly registered Master account.
+     */
     @Override
     public Master register(MasterLogin masterLogin, MasterPassword masterPassword) {
-        isPasswordValid(masterPassword);
-        MasterPassword encodedMasterPassword = encodePassword.apply(masterPassword);
+        String encodedPassword = encryptionService.encodePassword(masterPassword);
+        MasterPassword encodedMasterPassword = new MasterPassword(encodedPassword);
 
         return masterRepository.register(masterLogin, encodedMasterPassword);
-    }
-
-    /**
-     * TODO: find a library to have password validity check directly in records or interface.
-     */
-    private static void isPasswordValid(MasterPassword masterPassword) {
-        final String masterPasswordValue = masterPassword.rawPassword();
-        final boolean hasUpperCase = masterPasswordValue.matches(".*[A-Z].*");
-        final boolean hasDigits = masterPasswordValue.matches(".*\\d.*");
-        final boolean hasSpecialCharacters = masterPasswordValue.matches(".*[^a-zA-Z0-9].*");
-
-        if (!hasUpperCase)
-            throw new PasswordNotCompleteException("Make sure the password contains at least one upper case letter.");
-
-        if (!hasDigits)
-            throw new PasswordNotCompleteException("Make sure the password contains at least one digit.");
-
-        if (!hasSpecialCharacters)
-            throw new PasswordNotCompleteException("Make sure the password contains at least one special character.");
     }
 }
