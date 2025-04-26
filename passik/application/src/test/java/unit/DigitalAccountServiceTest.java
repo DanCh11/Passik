@@ -22,75 +22,75 @@ import static utils.Fixtures.*;
 @ExtendWith(MockitoExtension.class)
 public class DigitalAccountServiceTest {
 
-    @Mock private DigitalAccountRepository digitalAccountRepository;
-    @Mock private EncryptionService encryptionService;
-    private DigitalAccountService credentialsService;
+     @Mock private DigitalAccountRepository digitalAccountRepository;
+     @Mock private EncryptionService encryptionService;
+     private DigitalAccountService credentialsService;
 
-    @BeforeEach
-    void setup() {
-        credentialsService = new DigitalAccountService(digitalAccountRepository, encryptionService);
-    }
+     @BeforeEach
+     void setup() {
+         credentialsService = new DigitalAccountService(digitalAccountRepository, encryptionService);
+     }
 
-    @Test
-    @DisplayName("Testing successful digital account creation")
-    public void testSuccessfulDigitalAccountCreation() {
-        lenient().when(encryptionService.encodeCredentialPassword(credentialPassword))
-                .thenReturn(encryptedCredentialPassword);
-        lenient().when(digitalAccountRepository.save(any(DigitalAccount.class)))
-                .thenReturn(digitalAccountWithEncryptedPassword);
+     @Test
+     @DisplayName("Testing successful digital account creation")
+     public void testSuccessfulDigitalAccountCreation() {
+         lenient().when(encryptionService.encodePassword(credentialPassword))
+                 .thenReturn(encryptedCredentialPassword.rawPassword());
+         lenient().when(digitalAccountRepository.save(any(DigitalAccount.class)))
+                 .thenReturn(digitalAccountWithEncryptedPassword);
 
-        DigitalAccount createdDigitalAccount = credentialsService.save(digitalAccount);
-        verify(digitalAccountRepository).save(argThat(account ->
-                account.credentials().credentialPassword().rawPassword().equals(encryptedCredentialPassword.rawPassword())));
+         DigitalAccount createdDigitalAccount = credentialsService.save(digitalAccount);
+         verify(digitalAccountRepository).save(argThat(account ->
+                 account.credentials().credentialPassword().rawPassword().equals(encryptedCredentialPassword.rawPassword())));
 
-        assertNotNull(createdDigitalAccount);
-        assertEquals(digitalAccountWithEncryptedPassword, createdDigitalAccount);
-    }
+         assertNotNull(createdDigitalAccount);
+         assertEquals(digitalAccountWithEncryptedPassword, createdDigitalAccount);
+     }
 
-    @Test
-    @DisplayName("Testing successful digital account update")
-    public void testSuccessfulDigitalAccountUpdate() {
-        lenient().when(digitalAccountRepository.findByDigitalServiceName(digitalAccount.masterId(), digitalServiceName))
-                .thenReturn(digitalAccount);
-        lenient().when(encryptionService.encodeCredentialPassword(any(CredentialPassword.class)))
-                .thenReturn(encryptedCredentialPassword);
-        lenient().when(digitalAccountRepository.save(any(DigitalAccount.class))).thenReturn(updatedDigitalAccount);
+     @Test
+     @DisplayName("Testing successful digital account update")
+     public void testSuccessfulDigitalAccountUpdate() {
+         lenient().when(digitalAccountRepository.findByDigitalServiceName(digitalAccount.masterId(), digitalServiceName))
+                 .thenReturn(digitalAccount);
+         lenient().when(encryptionService.encodePassword(any(CredentialPassword.class)))
+                 .thenReturn(encryptedCredentialPassword.rawPassword());
+         lenient().when(digitalAccountRepository.save(any(DigitalAccount.class))).thenReturn(updatedDigitalAccount);
 
-        DigitalAccount update = credentialsService.update(digitalServiceName, updatedDigitalAccount);
+         DigitalAccount update = credentialsService.update(digitalServiceName, updatedDigitalAccount);
 
-        assertNotNull(update);
-        assertEquals(updatedDigitalAccount, update);
-    }
+         assertNotNull(update);
+         assertEquals(updatedDigitalAccount, update);
+     }
 
-    @Test
-    @DisplayName("Testing successful digital account deletion")
-    public void testSuccessfulDigitalAccountDeletion() {
-        lenient().when(digitalAccountRepository.findByDigitalServiceName(digitalAccount.masterId(), digitalServiceName))
-                .thenReturn(digitalAccount);
+     @Test
+     @DisplayName("Testing successful digital account deletion")
+     public void testSuccessfulDigitalAccountDeletion() {
+         lenient().when(digitalAccountRepository.findByDigitalServiceName(digitalAccount.masterId(), digitalServiceName))
+                 .thenReturn(digitalAccount);
 
-        credentialsService = new DigitalAccountService(digitalAccountRepository, encryptionService);
-        DigitalAccountDeletionResult deletedDigitalAccount = credentialsService.delete(digitalAccount);
+         credentialsService = new DigitalAccountService(digitalAccountRepository, encryptionService);
+         DigitalAccountDeletionResult deletedDigitalAccount = credentialsService.delete(digitalAccount);
 
-        assertTrue(deletedDigitalAccount.isSuccessful());
-        assertEquals(
-                "Digital account deleted successfully for service: DigitalServiceName[name=digital service]",
-                deletedDigitalAccount.message());
-    }
+         assertTrue(deletedDigitalAccount.isSuccessful());
+         assertEquals(
+                 "Digital account deleted successfully for service: DigitalServiceName[name=digital service]",
+                 deletedDigitalAccount.message());
+     }
 
-    @Test
-    @DisplayName("Testing exception of duplication saving")
-    public void testSaveAlreadyExistingAccountException() {
-        lenient().when(digitalAccountRepository.findByDigitalServiceName(digitalAccount.masterId(), digitalServiceName))
-                .thenReturn(digitalAccount);
-        assertThrows(DuplicateAccountException.class, () -> credentialsService.save(digitalAccount));
-    }
+     @Test
+     @DisplayName("Testing exception of duplication saving")
+     public void testSaveAlreadyExistingAccountException() {
+         lenient().when(digitalAccountRepository.findByDigitalServiceName(digitalAccount.masterId(), digitalServiceName))
+                 .thenReturn(digitalAccount);
+         assertThrows(DuplicateAccountException.class, () -> credentialsService.save(digitalAccount));
+     }
 
-    @Test
-    @DisplayName("Testing exception of enabledness finding the digital account")
-    public void testNotFoundDigitalAccountException() {
-        lenient().when(digitalAccountRepository.findByDigitalServiceName(digitalAccount.masterId(), digitalServiceName))
-                .thenReturn(null);
-        assertThrows(DigitalAccountNotFoundException.class, () -> credentialsService.update(digitalServiceName, digitalAccount));
-    }
+     @Test
+     @DisplayName("Testing exception of enabledness finding the digital account")
+     public void testNotFoundDigitalAccountException() {
+         lenient().when(digitalAccountRepository.findByDigitalServiceName(digitalAccount.masterId(), digitalServiceName))
+                 .thenReturn(null);
+         assertThrows(DigitalAccountNotFoundException.class, () -> credentialsService.update(digitalServiceName, digitalAccount));
+     }
 
 }

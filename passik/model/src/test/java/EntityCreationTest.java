@@ -2,6 +2,8 @@ import de.daycu.passik.model.auth.Master;
 import de.daycu.passik.model.auth.MasterId;
 import de.daycu.passik.model.auth.MasterLogin;
 import de.daycu.passik.model.auth.MasterPassword;
+import de.daycu.passik.model.auth.PasswordNotCompleteException;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -34,5 +36,13 @@ public class EntityCreationTest {
     public void testEntitiesHaveEmptyValues() {
         assertThrows(IllegalArgumentException.class, () -> new MasterLogin(""));
         assertThrows(IllegalArgumentException.class, () -> new MasterPassword(""));
+    }
+
+    @Test
+    @DisplayName("Testing master password creation validity")
+    public void testMasterPasswordCreationValidity() {
+        assertThrows(PasswordNotCompleteException.class, () -> new MasterPassword("1234"));
+        assertThrows(PasswordNotCompleteException.class, () -> new MasterPassword("masterpassword1!"));
+        assertThrows(PasswordNotCompleteException.class, () -> new MasterPassword("masterPassword"));
     }
 }
