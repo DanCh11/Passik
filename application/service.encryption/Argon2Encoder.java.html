@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../jacoco-resources/report.gif" type="image/gif"/><title>Argon2Encoder.java</title><link rel="stylesheet" href="../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../index.html" class="el_report">code-coverage</a> &gt; <a href="../index.html" class="el_bundle">application</a> &gt; <a href="index.source.html" class="el_package">service.encryption</a> &gt; <span class="el_source">Argon2Encoder.java</span></div><h1>Argon2Encoder.java</h1><pre class="source lang-java linenums">package service.encryption;
+
+import de.daycu.passik.model.auth.Password;
+import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
+
+/**
+ * Uses Argon2 for password hashing, leveraging Spring Security's implementation.
+ * Provides secure encoding and verification of passwords.
+ */
+public class Argon2Encoder implements PasswordEncoder&lt;Password&gt; {
+
+    private final Argon2PasswordEncoder encoder;
+
+    /**
+     * Configures Argon2 with specific parameters for security and performance.
+     * Parameters: saltLength=16, hashLength=32, parallelism=1, memoryLimit=65536, iterations=2.
+     */
+<span class="fc" id="L18">    public Argon2Encoder() {</span>
+<span class="fc" id="L19">        final int hashLength = 32;</span>
+<span class="fc" id="L20">        final int saltLength = 16;</span>
+<span class="fc" id="L21">        final int parallelism = 1;</span>
+<span class="fc" id="L22">        final int memoryLimit = 66536;</span>
+<span class="fc" id="L23">        final int iterations = 2;</span>
+<span class="fc" id="L24">        this.encoder = new Argon2PasswordEncoder(saltLength, hashLength, parallelism, memoryLimit, iterations);</span>
+<span class="fc" id="L25">    }</span>
+
+    /**
+     * Encodes the raw password using Argon2. Assumes Password has rawPassword() method.
+     * @param password The password to encode.
+     * @return The Argon2 hashed password.
+     * @throws EncryptionException If encoding fails.
+     */
+    @Override
+    public String encode(Password password) throws EncryptionException {
+<span class="fc" id="L35">        return encoder.encode(password.rawPassword());</span>
+    }
+
+    /**
+     * Verifies if the raw password matches the Argon2 encoded password.
+     * Assumes Password has rawPassword() method.
+     * @param password The password to verify.
+     * @param encodedPassword The stored encoded password.
+     * @return True if passwords match, false otherwise.
+     */
+    @Override
+    public boolean verify(Password password, String encodedPassword) {
+<span class="fc" id="L47">        return encoder.matches(password.rawPassword(), encodedPassword);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

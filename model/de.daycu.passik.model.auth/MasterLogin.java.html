@@ -2,10 +2,16 @@
 
 import lombok.NonNull;
 
-<span class="fc bfc" id="L5" title="All 2 branches covered.">public record MasterLogin(@NonNull String value) {</span>
+/**
+ * Login identifier for a master user.
+ * Ensures the value is not empty.
+ * @param value The login value.
+ * @throws IllegalArgumentException If value is empty.
+ */
+<span class="fc bfc" id="L11" title="All 2 branches covered.">public record MasterLogin(@NonNull String value) {</span>
 
-<span class="fc" id="L7">    public MasterLogin {</span>
-<span class="fc bfc" id="L8" title="All 2 branches covered.">        if (value.isEmpty()) throw new IllegalArgumentException(&quot;'value' must not be empty&quot;);</span>
-<span class="fc" id="L9">    }</span>
+<span class="fc" id="L13">    public MasterLogin {</span>
+<span class="fc bfc" id="L14" title="All 2 branches covered.">        if (value.isEmpty()) throw new IllegalArgumentException(&quot;'value' must not be empty&quot;);</span>
+<span class="fc" id="L15">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

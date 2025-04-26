@@ -8,45 +8,29 @@ import port.in.registration.RegistrationUseCase;
 import port.out.persistance.MasterRepository;
 import service.encryption.EncryptionService;
 
-import java.util.function.Function;
-
+/**
+ * Service responsible for registering new master accounts.
+ * Handles the encoding of the master password before persisting the account.
+ */
 @AllArgsConstructor
 public class RegistrationService implements RegistrationUseCase {
 
     public MasterRepository masterRepository;
     public EncryptionService encryptionService;
 
-    private final Function&lt;MasterPassword, MasterPassword&gt; encodePassword =
-            credentialPassword -&gt;  {
-<span class="fc" id="L21">                String encodedPassword = encryptionService.encodePassword(credentialPassword);</span>
-<span class="fc" id="L22">                return new MasterPassword(encodedPassword);</span>
-            };
-
+    /**
+     * Registers a new master account.
+     * Encodes the provided master password before saving it via the repository.
+     * @param masterLogin The login details for the new master account.
+     * @param masterPassword The raw password for the new master account. This will be encoded.
+     * @return The newly registered Master account.
+     */
     @Override
     public Master register(MasterLogin masterLogin, MasterPassword masterPassword) {
-<span class="fc" id="L27">        isPasswordValid(masterPassword);</span>
-<span class="fc" id="L28">        MasterPassword encodedMasterPassword = encodePassword.apply(masterPassword);</span>
+<span class="fc" id="L30">        String encodedPassword = encryptionService.encodePassword(masterPassword);</span>
+<span class="fc" id="L31">        MasterPassword encodedMasterPassword = new MasterPassword(encodedPassword);</span>
 
-<span class="fc" id="L30">        return masterRepository.register(masterLogin, encodedMasterPassword);</span>
+<span class="fc" id="L33">        return masterRepository.register(masterLogin, encodedMasterPassword);</span>
     }
-
-    /**
-     * TODO: find a library to have password validity check directly in records or interface.
-     */
-    private static void isPasswordValid(MasterPassword masterPassword) {
-<span class="fc" id="L37">        final String masterPasswordValue = masterPassword.rawPassword();</span>
-<span class="fc" id="L38">        final boolean hasUpperCase = masterPasswordValue.matches(&quot;.*[A-Z].*&quot;);</span>
-<span class="fc" id="L39">        final boolean hasDigits = masterPasswordValue.matches(&quot;.*\\d.*&quot;);</span>
-<span class="fc" id="L40">        final boolean hasSpecialCharacters = masterPasswordValue.matches(&quot;.*[^a-zA-Z0-9].*&quot;);</span>
-
-<span class="fc bfc" id="L42" title="All 2 branches covered.">        if (!hasUpperCase)</span>
-<span class="fc" id="L43">            throw new PasswordNotCompleteException(&quot;Make sure the password contains at least one upper case letter.&quot;);</span>
-
-<span class="fc bfc" id="L45" title="All 2 branches covered.">        if (!hasDigits)</span>
-<span class="fc" id="L46">            throw new PasswordNotCompleteException(&quot;Make sure the password contains at least one digit.&quot;);</span>
-
-<span class="fc bfc" id="L48" title="All 2 branches covered.">        if (!hasSpecialCharacters)</span>
-<span class="fc" id="L49">            throw new PasswordNotCompleteException(&quot;Make sure the password contains at least one special character.&quot;);</span>
-<span class="fc" id="L50">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

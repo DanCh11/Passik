@@ -2,38 +2,96 @@
 
 import de.daycu.passik.model.auth.MasterLogin;
 import de.daycu.passik.model.auth.MasterPassword;
+import lombok.NonNull;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.mgt.DefaultSecurityManager;
 import org.apache.shiro.subject.Subject;
 import port.in.auth.AuthenticationUseCase;
+import port.out.persistance.MasterRepository;
+import service.encryption.EncryptionService;
 
 /**
- *  Performs authentication by instantiating the users using UserSecurityManager.
- *
- *  @return successful authentication if the user is found. Else throws an exception.
+ * Service responsible for handling user authentication.
+ * Leverages the Apache Shiro security framework to authenticate master users
+ * against the data stored in the {@link MasterRepository}, using the
+ * {@link EncryptionService} for password verification indirectly through Shiro.
  */
-<span class="fc" id="L18">public class AuthenticationService implements AuthenticationUseCase {</span>
+public class AuthenticationService implements AuthenticationUseCase {
 
-    // TODO: add masterLogin and masterPassword as variables for constructor
+    private final MasterRepository masterRepository;
+    private final EncryptionService encryptionService;
+
+    /**
+     * Constructs a new {@code AuthenticationService}.
+     * Initializes the service with the necessary {@link MasterRepository} for
+     * accessing user data and the {@link EncryptionService} for password
+     * verification. It also initializes the Shiro security manager during
+     * construction.
+     *
+     * @param masterRepository The repository for accessing master user data. Must not be null.
+     * @param encryptionService The service responsible for password encoding and verification. Must not be null.
+     */
+    public AuthenticationService(
+<span class="pc bpc" id="L39" title="1 of 2 branches missed.">            @NonNull MasterRepository masterRepository,</span>
+<span class="pc bpc" id="L40" title="1 of 2 branches missed.">            @NonNull EncryptionService encryptionService) {</span>
+
+<span class="fc" id="L42">        this.masterRepository = masterRepository;</span>
+<span class="fc" id="L43">        this.encryptionService = encryptionService;</span>
+<span class="fc" id="L44">        initializeShiro();</span>
+<span class="fc" id="L45">    }</span>
+
+    /**
+     * Authenticates a master user based on the provided login and password.
+     * Uses Apache Shiro to perform the authentication process. It creates an
+     * authentication token with the user's credentials and attempts to log them in.
+     * Exceptions are caught and re-thrown as specific {@link AuthenticationException}
+     * subtypes to provide more context about the authentication failure.
+     *
+     * @param masterLogin The login details of the master user.
+     * @param masterPassword The raw password provided by the master user for authentication.
+     * @return An {@link AuthenticationResult} indicating the success or failure of the authentication.
+     *
+     * @throws IncorrectCredentialsException If the provided password does not match the stored password for the user.
+     * @throws UnknownAccountException If no account is found for the given login.
+     * @throws AuthenticationException If a general error occurs during the authentication process.
+     */
     public AuthenticationResult authenticate(MasterLogin masterLogin, MasterPassword masterPassword) {
-<span class="fc" id="L22">        Subject user = SecurityUtils.getSubject();</span>
-<span class="fc" id="L23">        UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(</span>
-<span class="fc" id="L24">                masterLogin.value(), masterPassword.rawPassword());</span>
+<span class="fc" id="L63">        Subject user = SecurityUtils.getSubject();</span>
+<span class="fc" id="L64">        UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(</span>
+<span class="fc" id="L65">                masterLogin.value(), masterPassword.rawPassword());</span>
 
         try {
-<span class="fc" id="L27">            user.login(usernamePasswordToken);</span>
-<span class="fc" id="L28">            return new AuthenticationResult(true, &quot;Login was performed successfully.&quot;);</span>
-<span class="fc" id="L29">        } catch (IncorrectCredentialsException ice) {</span>
-<span class="fc" id="L30">            throw new IncorrectCredentialsException(</span>
+<span class="fc" id="L68">            user.login(usernamePasswordToken);</span>
+<span class="fc" id="L69">            return new AuthenticationResult(true, &quot;Login was performed successfully.&quot;);</span>
+<span class="fc" id="L70">        } catch (IncorrectCredentialsException ice) {</span>
+<span class="fc" id="L71">            throw new IncorrectCredentialsException(</span>
                     &quot;Invalid credentials provided. Please check your username and password.&quot;, ice);
-<span class="fc" id="L32">        } catch (UnknownAccountException uae) {</span>
-<span class="fc" id="L33">            throw new UnknownAccountException(&quot;Account is not registered&quot;, uae);</span>
-<span class="nc" id="L34">        } catch (AuthenticationException ae) {</span>
-<span class="nc" id="L35">            throw new AuthenticationException(&quot;Authentication failed due to error: &quot;, ae);</span>
+<span class="fc" id="L73">        } catch (UnknownAccountException uae) {</span>
+<span class="fc" id="L74">            throw new UnknownAccountException(&quot;Account is not registered&quot;, uae);</span>
+<span class="nc" id="L75">        } catch (AuthenticationException ae) {</span>
+<span class="nc" id="L76">            throw new AuthenticationException(&quot;Authentication failed due to error: &quot;, ae);</span>
         }
     }
+
+    /**
+     * Initializes the Apache Shiro security framework.
+     * This method is called once during the construction of the {@code AuthenticationService}.
+     * It creates a {@link MasterRealm}, which is responsible for authenticating master users,
+     * configures it to use the application's {@link MasterRepository} and {@link EncryptionService}
+     * (via the {@link EncryptionCredentialMatcher} set in the Realm), and sets up a
+     * {@link DefaultSecurityManager} with this Realm. Finally, it makes this security manager
+     * the globally accessible security manager for Shiro. The `synchronized` keyword ensures
+     * that this initialization happens only once, even in a multi-threaded environment.
+     */
+    private synchronized void initializeShiro() {
+<span class="fc" id="L91">        MasterRealm masterRealm = new MasterRealm(masterRepository, encryptionService);</span>
+<span class="fc" id="L92">        DefaultSecurityManager defaultSecurityManager = new DefaultSecurityManager(masterRealm);</span>
+<span class="fc" id="L93">        SecurityUtils.setSecurityManager(defaultSecurityManager);</span>
+<span class="fc" id="L94">    }</span>
+
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

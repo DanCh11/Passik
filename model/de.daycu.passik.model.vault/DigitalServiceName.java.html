@@ -2,10 +2,18 @@
 
 import lombok.NonNull;
 
-<span class="pc bpc" id="L5" title="1 of 2 branches missed.">public record DigitalServiceName(@NonNull String name) {</span>
+/**
+ * Represents the name of a digital service.
+ * Ensures the name is not empty.
+ *
+ * @param name The name of the digital service.
+ *
+ * @throws IllegalArgumentException If name is empty.
+ */
+<span class="pc bpc" id="L13" title="1 of 2 branches missed.">public record DigitalServiceName(@NonNull String name) {</span>
 
-<span class="fc" id="L7">    public DigitalServiceName {</span>
-<span class="pc bpc" id="L8" title="1 of 2 branches missed.">        if (name.isEmpty()) throw new IllegalArgumentException(&quot;'name' must not be empty&quot;);</span>
-<span class="fc" id="L9">    }</span>
+<span class="fc" id="L15">    public DigitalServiceName {</span>
+<span class="pc bpc" id="L16" title="1 of 2 branches missed.">        if (name.isEmpty()) throw new IllegalArgumentException(&quot;'name' must not be empty&quot;);</span>
+<span class="fc" id="L17">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
