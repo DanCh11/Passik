@@ -4,6 +4,7 @@ import de.daycu.passik.model.auth.Master;
 import de.daycu.passik.model.auth.MasterLogin;
 import de.daycu.passik.model.auth.MasterPassword;
 import lombok.AllArgsConstructor;
+import lombok.NonNull;
 import port.in.registration.RegistrationUseCase;
 import port.out.persistance.MasterRepository;
 import service.encryption.EncryptionService;
@@ -15,8 +16,8 @@ import service.encryption.EncryptionService;
 @AllArgsConstructor
 public class RegistrationService implements RegistrationUseCase {
 
-    public MasterRepository masterRepository;
-    public EncryptionService encryptionService;
+    @NonNull private final MasterRepository masterRepository;
+    @NonNull private final EncryptionService encryptionService;
 
     /**
      * Registers a new master account.
