@@ -14,7 +14,6 @@ import service.vault.DigitalAccountService;
 import utils.InMemoryDigitalAccountRepository;
 import utils.InMemoryMasterRepository;
 
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static utils.Fixtures.*;
@@ -53,10 +52,11 @@ public class CreateMasterAddDigitalAccountTest {
 
      private void addDigitalAccount() {
          DigitalAccount savedDigitalAccount = digitalAccountService.save(digitalAccount);
-         assertNotNull(digitalAccountRepository.findAllByMasterId(digitalAccount.masterId()));
+         assertNotNull(digitalAccountRepository.findAllByMasterId(masterId));
 
          DigitalAccount inMemoryDigitalAccount = digitalAccountRepository.findByDigitalServiceName(
                  savedDigitalAccount.masterId(), savedDigitalAccount.digitalServiceName());
          assertEquals(savedDigitalAccount, inMemoryDigitalAccount);
      }
+
 }
